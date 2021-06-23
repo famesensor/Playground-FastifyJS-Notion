@@ -1,9 +1,28 @@
-import fastify from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
+import helmet from 'fastify-helmet';
+import cors from 'fastify-cors';
 import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
 
-dotenv.config();
+import notion from './routes/notion';
 
-const server = fastify({ logger: true });
+const server: FastifyInstance = fastify({
+    logger: {
+        level: 'info'
+    }
+});
+
+// middleware...
+server.register(cors);
+server.register(helmet);
+
+// route...
+server.register(notion, { prefix: '/api/notion' });
+
+// healthz check...
+server.get('/ping', async (request, reply) => {
+    reply.code(200).send({ message: 'success' });
+});
 
 const port = process.env.PORT || 3000;
 
