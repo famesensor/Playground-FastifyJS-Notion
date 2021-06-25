@@ -10,7 +10,6 @@ const getAllApplications = async (req: FastifyRequest, reply: FastifyReply) => {
         });
 
         const notions = data.results.map((item) => {
-            console.log(item);
             return {
                 id: item.id,
                 create_date: item.created_time,
@@ -28,9 +27,28 @@ const getAllApplications = async (req: FastifyRequest, reply: FastifyReply) => {
     }
 };
 
-const getApplication = async (req: FastifyRequest, reply: FastifyReply) => {
-    console.log(req.params.page_id!);
-    return null;
+const getApplication = async (
+    req: FastifyRequest<{ Params: { page_id: string } }>,
+    reply: FastifyReply
+) => {
+    const { page_id } = req.params;
+
+    try {
+        const data = await notion.pages.retrieve({
+            page_id: page_id
+        });
+
+        return {
+            object: data.object,
+            id: data.id,
+            archived: data.archived,
+            properties: data.properties,
+            create_date: data.created_time
+        };
+    } catch (error) {
+        console.log(error);
+        HandlerError(error);
+    }
 };
 
 const getDatabases = async (req: FastifyRequest, reply: FastifyReply) => {
