@@ -11,6 +11,12 @@ const notionRoute = async (app: FastifyInstance) => {
 
     app.route({
         method: 'GET',
+        url: '/task/:page_id',
+        handler: notion.getApplication
+    });
+
+    app.route({
+        method: 'GET',
         url: '/databases',
         handler: notion.getDatabases
     });
