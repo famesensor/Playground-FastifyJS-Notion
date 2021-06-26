@@ -1,8 +1,16 @@
 import { FastifyInstance } from 'fastify';
 
 import * as notion from '../controller/notion';
+import { createPage } from '../utils/validators/notion';
 
 const notionRoute = async (app: FastifyInstance) => {
+    app.route({
+        method: 'POST',
+        url: '/task/',
+        schema: createPage,
+        handler: notion.createPage
+    });
+
     app.route({
         method: 'GET',
         url: '/task-list',
